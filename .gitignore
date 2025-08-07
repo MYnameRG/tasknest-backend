@@ -1,0 +1,6 @@
+# Basic Files
+node_modules
+package-lock.json
+
+# Environment Files
+.env
