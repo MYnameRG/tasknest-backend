@@ -43,9 +43,9 @@ class TaskController {
         try {
             const { id } = req.params;
 
-            if (!id || typeof id !== 'string') {
-                return res.status(400).json({ success: false, message: 'Task id is required as query param!' });
-            }
+            // if (!id || typeof id !== 'string') {
+            //     return res.status(400).json({ success: false, message: 'Task id is required as query param!' });
+            // }
 
             const { title, description } = req.body;
 
@@ -75,9 +75,9 @@ class TaskController {
         try {
             const { id } = req.params;
 
-            if (!id || typeof id !== 'string') {
-                return res.status(400).json({ success: false, message: 'Task id is required as query param!' });
-            }
+            // if (!id || typeof id !== 'string') {
+            //     return res.status(400).json({ success: false, message: 'Task id is required as query param!' });
+            // }
 
             const deletedTask = await MTask?.findByIdAndDelete(id);
 

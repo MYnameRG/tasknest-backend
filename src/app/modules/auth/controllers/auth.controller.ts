@@ -28,7 +28,7 @@ class AuthController {
 
             return res.status(201).json({ success: true, message: 'User registered successfully' });
         } catch (error) {
-            console.log(error)
+            console.log(error);
             return res.status(500).json({ success: false, message: 'Registration failed', error });
         }
     }
@@ -42,12 +42,12 @@ class AuthController {
 
             const user = await MUser?.findOne({ email });
             if (!user) {
-                return res.status(401).json({ success: false, message: 'Invalid credentials' });
+                return res.status(401).json({ success: false, message: 'User not existed!' });
             }
 
             const isMatch = await verifyPassword(password, user.password);
             if (!isMatch) {
-                return res.status(401).json({ success: false, message: 'Invalid credentials' });
+                return res.status(401).json({ success: false, message: 'Invalid credentials!' });
             }
 
             const payload = {
@@ -65,6 +65,7 @@ class AuthController {
                 },
             });
         } catch (error) {
+            console.log(error);
             return res.status(500).json({ success: false, message: 'Login failed', error });
         }
     }
