@@ -1,0 +1,7 @@
+# Basic Files
+node_modules
+package-lock.json
+.vscode
+
+# Environment Files
+.env
