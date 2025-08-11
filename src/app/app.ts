@@ -2,6 +2,7 @@ import type { Express } from "express";
 import express from 'express';
 import CONFIG from "./config/env";
 import dbServer from "./database";
+import * as cors from "cors";
 
 class AppServer {
     private app: Express;
@@ -15,6 +16,7 @@ class AppServer {
     }
 
     private addMiddlewareBeforeRoute() {
+        this.app.use(cors.default())
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
     }
