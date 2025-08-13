@@ -40,7 +40,7 @@ class AuthController {
         try {
             const { email, password } = req.body;
 
-            const user = await MUser?.findOne({ email });
+            const user = await MUser?.findOne({ email }).lean();
             if (!user) {
                 return res.status(401).json({ success: false, message: 'User not existed!' });
             }
@@ -61,9 +61,7 @@ class AuthController {
             return res.status(200).json({
                 success: true, message: 'Login successful', 
                 token,
-                user: {
-                    id: user._id, name: user.name, email: user.email,
-                },
+                user: { ...user, password: undefined }
             });
         } catch (error) {
             console.log(error);

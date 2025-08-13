@@ -5,10 +5,9 @@ class AuthHelper {
     private static jwtSecret = CONFIG.JWT_SECRET as Secret;
 
     // Generate Token
-    static createToken = async (payload: object, expiresIn = '15m') => {
+    static createToken = async (payload: object, expiresIn = '1h') => {
         try {
             return jwt.sign(payload, this.jwtSecret, {
-                expiresIn,
             } as SignOptions) as string;
         }
         catch (e) {

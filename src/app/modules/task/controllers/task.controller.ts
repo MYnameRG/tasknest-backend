@@ -10,7 +10,7 @@ class TaskController {
         try {
             const tasks = await MTask?.find();
 
-            return res.status(200).json({ success: true, data: tasks });
+            return res.status(200).json({ success: true, tasks });
         } catch (error) {
             return res.status(500).json({ success: false, message: 'Error fetching tasks!', error });
         }
@@ -21,7 +21,7 @@ class TaskController {
      */
     static addTask = async (req: Request, res: Response) => {
         try {
-            const { title, description } = req.body;
+            const { title, content: description } = req.body;
 
             if (!title) {
                 return res.status(400).json({ success: false, message: 'Title is required!' });
@@ -29,7 +29,7 @@ class TaskController {
 
             const newTask = await MTask?.create({ title, description });
 
-            return res.status(201).json({ success: true, message: 'Task created successfully!', data: newTask });
+            return res.status(201).json({ success: true, message: 'Task created successfully!', created: newTask });
         } catch (error) {
             console.log(error);
             return res.status(500).json({ success: false, message: 'Error creating task!', error });
@@ -47,7 +47,7 @@ class TaskController {
             //     return res.status(400).json({ success: false, message: 'Task id is required as query param!' });
             // }
 
-            const { title, description } = req.body;
+            const { title, content: description } = req.body;
 
             const updatedTask = await MTask?.findByIdAndUpdate(
                 id,
@@ -62,7 +62,7 @@ class TaskController {
                 return res.status(404).json({ success: false, message: 'Task not found!' });
             }
 
-            return res.status(200).json({ success: true, message: 'Task updated successfully!', data: updatedTask });
+            return res.status(200).json({ success: true, message: 'Task updated successfully!', updated: updatedTask });
         } catch (error) {
             return res.status(500).json({ success: false, message: 'Error updating task!', error });
         }
@@ -80,12 +80,11 @@ class TaskController {
             // }
 
             const deletedTask = await MTask?.findByIdAndDelete(id);
-
             if (!deletedTask) {
                 return res.status(404).json({ success: false, message: 'Task not found!' });
             }
 
-            return res.status(200).json({ success: true, message: `Task deleted successfully!`, data: deletedTask });
+            return res.status(200).json({ success: true, message: `Task deleted successfully!`, deleted: deletedTask });
         } catch (error) {
             return res.status(500).json({ success: false, message: 'Error deleting task!', error });
         }
