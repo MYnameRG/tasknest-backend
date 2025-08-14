@@ -21,13 +21,25 @@ class TaskController {
      */
     static addTask = async (req: Request, res: Response) => {
         try {
-            const { title, content: description } = req.body;
+            const {
+                title,
+                content: description,
+                category,
+                deadline,
+                priority
+            } = req.body;
 
             if (!title) {
                 return res.status(400).json({ success: false, message: 'Title is required!' });
             }
 
-            const newTask = await MTask?.create({ title, description });
+            const newTask = await MTask?.create({
+                title,
+                description,
+                category,
+                deadline,
+                priority
+            });
 
             return res.status(201).json({ success: true, message: 'Task created successfully!', created: newTask });
         } catch (error) {
@@ -43,17 +55,22 @@ class TaskController {
         try {
             const { id } = req.params;
 
-            // if (!id || typeof id !== 'string') {
-            //     return res.status(400).json({ success: false, message: 'Task id is required as query param!' });
-            // }
-
-            const { title, content: description } = req.body;
+            const {
+                title,
+                content: description,
+                category,
+                deadline,
+                priority
+            } = req.body;
 
             const updatedTask = await MTask?.findByIdAndUpdate(
                 id,
                 {
                     ...(title && { title }),
-                    ...(description && { description }) 
+                    ...(description && { description }),
+                    ...(category && { category }),
+                    ...(deadline && { deadline }),
+                    ...(priority && { priority })
                 },
                 { new: true }
             );
@@ -74,10 +91,6 @@ class TaskController {
     static deleteTask = async (req: Request, res: Response) => {
         try {
             const { id } = req.params;
-
-            // if (!id || typeof id !== 'string') {
-            //     return res.status(400).json({ success: false, message: 'Task id is required as query param!' });
-            // }
 
             const deletedTask = await MTask?.findByIdAndDelete(id);
             if (!deletedTask) {
