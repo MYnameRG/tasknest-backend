@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import MTask from '../models/task.model';
+import { ITask } from '../interfaces/task.interface';
+import { Status } from '../../../shared/enums/task.enum';
 
 class TaskController {
 
@@ -70,7 +72,7 @@ class TaskController {
                     ...(description && { description }),
                     ...(category && { category }),
                     ...(deadline && { deadline }),
-                    ...(priority && { priority })
+                    ...(priority >= -1 && { priority })
                 },
                 { new: true }
             );

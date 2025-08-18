@@ -27,13 +27,13 @@ const taskSchema = new Schema<ITask>(
     },
     category: {
       type: String,
-      enum: [Tags.GENERAL, Tags.MEETING, Tags.PERSONAL, Tags.WORK, Tags.STUDY],
-      default: Tags.GENERAL
+      enum: [Tags.NONE, Tags.GENERAL, Tags.MEETING, Tags.PERSONAL, Tags.WORK, Tags.STUDY],
+      default: Tags.NONE
     },
     priority: {
       type: Number,
-      enum: [Priority.LOW, Priority.MEDIUM, Priority.HIGH],
-      default: Priority.LOW
+      enum: [Priority.NONE, Priority.LOW, Priority.MEDIUM, Priority.HIGH],
+      default: Priority.NONE
     },
     status: {
       type: String,

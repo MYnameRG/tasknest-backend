@@ -4,11 +4,11 @@ export interface ITask extends Document {
     user: typeof User;
     title: string;
     description?: string;
-    category: 'General' | 'Personal' | 'Meeting' | 'Study' | 'Work';
-    priority: 0 | 1 | 2;
+    category: '' | 'GENERAL' | 'PERSONAL' | 'MEETING' | 'STUDY' | 'WORK';
+    priority: -1 | 0 | 1 | 2;
     deadline?: Date;
     isArchieve: boolean;
-    status: 'To Do' | 'In Progress' | 'Completed';
+    status: 'TODO' | 'INPROGRESS' | 'COMPLETED';
     createdAt: Date;
     updatedAt: Date;
 }
