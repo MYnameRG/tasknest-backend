@@ -1,5 +1,5 @@
 export const TaskPrompts = {
-    categorizeTasks: (categories: string[], tasks: string[]) => `
+    categorizeTasks: ({ categories, tasks }: { categories: string[], tasks: any[] }) => `
         You are an intelligent task assistant. 
         
         Categories available: ${categories.join(", ")}.
@@ -14,7 +14,7 @@ export const TaskPrompts = {
         ]
     `,
 
-    prioritizeTasks: (tasks: string[], priorities: string[]) => `
+    prioritizeTasks: ({ tasks, priorities }: { tasks: string[], priorities: string[] }) => `
         You are a productivity assistant.
 
         Here, the list of tasks:

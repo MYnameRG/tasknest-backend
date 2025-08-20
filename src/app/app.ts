@@ -40,7 +40,7 @@ class AppServer {
                 store: true,
             });
 
-            return res.status(200).json({ data: response, isSuccess: true, message: "Received Successfully" });
+            return res.status(200).json({ data: response.text, isSuccess: true, message: "Received Successfully" });
         });
 
         this.app.get("/google-ai/test", async (_, res) => {
@@ -54,7 +54,7 @@ class AppServer {
                 `
             });
 
-            return res.status(200).json({ data: response, isSuccess: true, message: "Received Successfully" });
+            return res.status(200).json({ data: response.text, isSuccess: true, message: "Received Successfully" });
         });
     }
 

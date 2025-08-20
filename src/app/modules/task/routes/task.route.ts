@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { listTasks, addTask, updateTask, deleteTask } from '../controllers/task.controller';
+import { listTasks, addTask, updateTask, deleteTask, autoCategorizedTasks } from '../controllers/task.controller';
 import { RequestValidator } from '../../../validators/request-validator';
 import { ManageTaskBodySchema } from '../dtos/body/manage-task.dto';
 import { GetTaskParamsSchema } from '../dtos/params/get-task.dto';
@@ -17,5 +17,8 @@ taskRouter.put(['/update', '/update/:id'], RequestValidator({ bodySchema: Manage
 
 // Delete the task
 taskRouter.delete(['/remove', '/remove/:id'], RequestValidator({ paramSchema: GetTaskParamsSchema }), deleteTask);
+
+// Auto Categorized Tasks
+taskRouter.get('/auto-categorize', autoCategorizedTasks);
 
 export default taskRouter;

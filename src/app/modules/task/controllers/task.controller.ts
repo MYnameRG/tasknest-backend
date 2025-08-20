@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import MTask from '../models/task.model';
-import { ITask } from '../interfaces/task.interface';
-import { Status } from '../../../shared/enums/task.enum';
+import { getCategorizedTasks } from '../services/task.service';
+import mongoose from 'mongoose';
 
 class TaskController {
 
@@ -43,7 +43,7 @@ class TaskController {
                 priority
             });
 
-            return res.status(201).json({ success: true, message: 'Task created successfully!', created: newTask });
+            return res.status(201).json({ success: true, message: 'Task created successfully!', created: newTask.toObject() });
         } catch (error) {
             console.log(error);
             return res.status(500).json({ success: false, message: 'Error creating task!', error });
@@ -69,9 +69,9 @@ class TaskController {
                 id,
                 {
                     ...(title && { title }),
-                    ...(description && { description }),
-                    ...(category && { category }),
-                    ...(deadline && { deadline }),
+                    ...((description || description == '') && { description }),
+                    ...((category || category == '') && { category }),
+                    ...((deadline || deadline == null) && { deadline }),
                     ...(priority >= -1 && { priority })
                 },
                 { new: true }
@@ -81,7 +81,7 @@ class TaskController {
                 return res.status(404).json({ success: false, message: 'Task not found!' });
             }
 
-            return res.status(200).json({ success: true, message: 'Task updated successfully!', updated: updatedTask });
+            return res.status(200).json({ success: true, message: 'Task updated successfully!', updated: updatedTask.toObject() });
         } catch (error) {
             return res.status(500).json({ success: false, message: 'Error updating task!', error });
         }
@@ -99,9 +99,55 @@ class TaskController {
                 return res.status(404).json({ success: false, message: 'Task not found!' });
             }
 
-            return res.status(200).json({ success: true, message: `Task deleted successfully!`, deleted: deletedTask });
+            return res.status(200).json({ success: true, message: `Task deleted successfully!`, deleted: deletedTask.toObject() });
         } catch (error) {
             return res.status(500).json({ success: false, message: 'Error deleting task!', error });
+        }
+    };
+
+    /**
+     * @route GET /api/v1/task/auto-categorize
+     */
+    static autoCategorizedTasks = async (_: Request, res: Response) => {
+        try {
+            const countTasks = await MTask?.countDocuments();
+
+            if (!countTasks) {
+                return res.status(400).json({ success: false, message: 'Task is not available!' })
+            }
+
+            const nonCategorizedTasks = await MTask?.find({
+                $or: [
+                    { category: { $exists: false } },
+                    { category: "" },
+                    { category: null }
+                ]
+            });
+
+            if (!nonCategorizedTasks || nonCategorizedTasks.length === 0) {
+                return res.status(400).json({ success: false, message: 'Task already categorized!' })
+            }
+
+            const categorizedTasks = await getCategorizedTasks(nonCategorizedTasks);
+            const bulkOps = categorizedTasks.map((task: any) => ({
+                updateOne: {
+                    filter: { _id: new mongoose.Types.ObjectId(task.task_id) },
+                    update: { $set: { category: task.category, updatedAt: new Date() } }
+                }
+            }));
+
+            if (!bulkOps || bulkOps.length == 0) {
+                return res.status(400).json({ success: false, message: 'Task not categorized!' })
+            }
+
+            await MTask?.bulkWrite(bulkOps);
+
+            const savedTasks = await MTask?.find();
+
+            return res.status(200).json({ success: true, tasks: savedTasks, message: `Saved categorized successfully!` });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ success: false, message: 'Error auto categorize tasks!', error });
         }
     };
 }
@@ -110,5 +156,6 @@ export const {
     listTasks,
     addTask,
     deleteTask,
-    updateTask
+    updateTask,
+    autoCategorizedTasks
 } = TaskController;
