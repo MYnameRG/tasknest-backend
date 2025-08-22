@@ -42,12 +42,12 @@ class AuthController {
 
             const user = await MUser?.findOne({ email }).lean();
             if (!user) {
-                return res.status(401).json({ success: false, message: 'User not existed!' });
+                return res.status(400).json({ success: false, message: 'User not existed!' });
             }
 
             const isMatch = await verifyPassword(password, user.password);
             if (!isMatch) {
-                return res.status(401).json({ success: false, message: 'Invalid credentials!' });
+                return res.status(400).json({ success: false, message: 'Invalid credentials!' });
             }
 
             const payload = {
